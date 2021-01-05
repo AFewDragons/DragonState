@@ -1,0 +1,7 @@
+{
+    "name": "com.github.afewdragons.globalstate",
+    "description": "Global State provides a robust system for maintaining and using state through out gameplay lifecycles.",
+    "version": "0.1",
+    "unity": "2018.1",
+    "displayName": "Global State"
+  }
