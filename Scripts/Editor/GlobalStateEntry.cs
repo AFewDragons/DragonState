@@ -17,15 +17,7 @@ namespace AFewDragons
         {
             serializedObject.Update();
             var name = serializedObject.FindProperty("StateName");
-            var value = serializedObject.FindProperty("Comparitor");
             EditorGUILayout.PropertyField(name);
-            
-            if (value.type == "int")
-            {
-                var intComparitorType = serializedObject.FindProperty("IntComparitorType");
-                EditorGUILayout.PropertyField(intComparitorType, new GUIContent("Comparison"));
-            }
-            EditorGUILayout.PropertyField(value);
 
             if (EditorApplication.isPlaying)
             {

@@ -1,11 +1,16 @@
 {
-    "name": "com.github.afewdragons.globalstate",
+    "name": "com.afewdragons.globalstate",
     "description": "Global State provides a robust system for maintaining and using state through out gameplay lifecycles.",
-    "version": "0.1.0-preview",
+    "version": "0.2.0-preview",
     "unity": "2018.1",
     "displayName": "Global State",
+	"author": {
+		"name": "A Few Dragons",
+		"email": "support@afewdragons.com",
+		"url": "https://afewdragons.com"
+	}
 	"repository": {
-		"url": "https://github.com/AFewDragons/GlobalState.git",
+		"url": "https://github.com/AFewDragons/GlobalState.git@",
 		"type": "git"
 	}
 }

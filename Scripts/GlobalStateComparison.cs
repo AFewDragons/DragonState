@@ -1,8 +1,8 @@
-﻿using Sys = System;
+﻿using System;
 
 namespace AFewDragons
 {
-    [Sys.Serializable]
+    [Serializable]
     public class GlobalStateComparison
     {
         public string StateName;

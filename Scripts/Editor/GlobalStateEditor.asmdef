@@ -1,0 +1,15 @@
+{
+    "name": "GlobalStateEditor",
+    "references": [
+        "GUID:e4ee3f57cfc53234a8e2178094e94d52"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
