@@ -8,7 +8,7 @@
 		"name": "A Few Dragons",
 		"email": "support@afewdragons.com",
 		"url": "https://afewdragons.com"
-	}
+	},
 	"repository": {
 		"url": "https://github.com/AFewDragons/GlobalState.git@",
 		"type": "git"
