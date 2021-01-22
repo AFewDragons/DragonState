@@ -16,3 +16,20 @@ Health, energy, is door open, quests, time clown laughed; anything you want to s
 * A key/value based state
 * Access via Scriptable Objects in the project hierachy
 * Create your own state types
+
+### Install
+
+#### Unity Package Manager
+
+To install this project using the Unity Package Manager,
+add the following line to your project's `manifest.json`:
+
+```
+"com.github.siccity.xnode": "https://github.com/siccity/xNode.git"
+```
+
+You will need to have Git installed and available in your system's PATH.
+
+#### Asset Folder
+
+Simply copy/paste the source files into your assets folder.
