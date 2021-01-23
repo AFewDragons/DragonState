@@ -22,10 +22,10 @@ Health, energy, is door open, quests, time clown laughed; anything you want to s
 #### Unity Package Manager
 
 To install this project using the Unity Package Manager,
-add the following line to your project's `manifest.json`:
+add the following via the Package
 
 ```
-"com.github.siccity.xnode": "https://github.com/siccity/xNode.git"
+https://github.com/AFewDragons/GlobalState.git
 ```
 
 You will need to have Git installed and available in your system's PATH.
