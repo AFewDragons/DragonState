@@ -16,13 +16,14 @@ Health, energy, is door open, quests, time clown laughed; anything you want to s
 * A key/value based state
 * Access via Scriptable Objects in the project hierachy
 * Create your own state types
+* Base states for int/float/string/bool included
 
 ### Install
 
 #### Unity Package Manager
 
 To install this project using the Unity Package Manager,
-add the following via the Package
+add the following via the Package 
 
 ```
 https://github.com/AFewDragons/GlobalState.git

@@ -7,7 +7,7 @@ namespace AFewDragons
     [Serializable]
     public class GlobalState
     {
-        public string Version;
+        public string Version = "1";
         public Dictionary<string, object> State = new Dictionary<string, object>();
     }
 
@@ -54,6 +54,12 @@ namespace AFewDragons
             if (string.IsNullOrWhiteSpace(key)) return;
             state.State[key] = newState;
             StateEvent.Invoke(key, newState);
+        }
+
+        public static void Remove(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key)) return;
+            state.State.Remove(key);
         }
 
         public static void AddListener(UnityAction<string, object> action)

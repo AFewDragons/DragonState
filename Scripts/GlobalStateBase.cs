@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace AFewDragons
 {
-    public class GlobalStateBase : ScriptableObject { }
+    public abstract class GlobalStateBase : ScriptableObject { }
 
-    public class GlobalStateBase<T> : GlobalStateBase
+    public abstract class GlobalStateBase<T> : GlobalStateBase
     {
         public string StateName;
 

@@ -11,13 +11,12 @@ namespace AFewDragons
         static void Init()
         {
             // Get existing open window or if none, make a new one:
-            GlobalStateWindow window = (GlobalStateWindow)EditorWindow.GetWindow(typeof(GlobalStateWindow));
+            GlobalStateWindow window = (GlobalStateWindow)GetWindow(typeof(GlobalStateWindow));
             window.Show();
         }
 
         private void Awake()
         {
-            Debug.Log("Start");
             GlobalStateManager.AddListener(StateChanged);
         }
 
@@ -28,7 +27,6 @@ namespace AFewDragons
 
         private void StateChanged(string key, object value)
         {
-            Debug.Log("Repaint");
             Repaint();
         }
 
@@ -36,10 +34,24 @@ namespace AFewDragons
         {
             if (EditorApplication.isPlaying)
             {
-                foreach (var state in GlobalStateManager.GetState().State)
+                if(GlobalStateManager.GetState() != null && GlobalStateManager.GetState().State != null)
                 {
-                    EditorGUILayout.LabelField(state.Key, state.Value.ToString());
+                    string removeState = null;
+                    foreach (var state in GlobalStateManager.GetState().State)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField(state.Key, state.Value.ToString());
+                        if(GUILayout.Button("Delete", GUILayout.Width(50))){
+                            removeState = state.Key;
+                        }
+                        EditorGUILayout.EndHorizontal();
+                    }
+                    if (!string.IsNullOrEmpty(removeState))
+                    {
+                        GlobalStateManager.Remove(removeState);
+                    }
                 }
+                
             }
             else
             {
