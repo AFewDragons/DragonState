@@ -17,6 +17,7 @@ Health, energy, is door open, quests, time clown laughed; anything you want to s
 * Access via Scriptable Objects in the project hierachy
 * Create your own state types
 * Base states for int/float/string/bool included
+* Manipulate state in editor window for testing
 
 ### Install
 
