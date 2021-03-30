@@ -9,9 +9,13 @@ namespace AFewDragons
     {
         public string StateName;
 
+        public bool UseDefault = true;
+
+        public T Default;
+
         public virtual T Get()
         {
-            return GlobalStateManager.Get(StateName, default(T));
+            return GlobalStateManager.Get(StateName, UseDefault ? Default : default(T));
         }
 
         public virtual void Set(T value)
