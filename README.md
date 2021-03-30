@@ -35,3 +35,7 @@ You will need to have Git installed and available in your system's PATH.
 #### Asset Folder
 
 Simply copy/paste the source files into your assets folder.
+
+### Community
+
+Create issues for bugs or feature requests.
