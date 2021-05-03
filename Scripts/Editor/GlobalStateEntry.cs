@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Reflection;
 
 namespace AFewDragons
 {
@@ -19,13 +20,43 @@ namespace AFewDragons
             var name = serializedObject.FindProperty("StateName");
             EditorGUILayout.PropertyField(name);
 
+            var useDefault = serializedObject.FindProperty("UseDefault");
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(useDefault);
+            if (useDefault.boolValue)
+            {
+                var rect = EditorGUILayout.GetControlRect();
+                EditorGUI.PropertyField(rect, serializedObject.FindProperty("Default"), GUIContent.none);
+            }
+            EditorGUILayout.EndHorizontal();
+
+
+            DrawPropertiesExcluding(serializedObject, new string[] { "StateName", "UseDefault", "Default", "m_Script" });
+
             if (EditorApplication.isPlaying)
             {
                 var runningValue = GlobalStateManager.Get<object>(name.stringValue, null);
                 EditorGUILayout.LabelField($"Value is: {runningValue}");
             }
 
+
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private string[] GetVariables(SerializedObject serializedObject)
+        {
+            List<string> variables = new List<string>();
+            BindingFlags bindingFlags = BindingFlags.DeclaredOnly | // This flag excludes inherited variables.
+                                        BindingFlags.Public |
+                                        BindingFlags.NonPublic |
+                                        BindingFlags.Instance |
+                                        BindingFlags.Static;
+            foreach (FieldInfo field in typeof(GlobalStateBase).GetFields(bindingFlags))
+            {
+                variables.Add(field.Name);
+            }
+            return variables.ToArray();
         }
     }
 }
