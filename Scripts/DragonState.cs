@@ -5,13 +5,13 @@ using UnityEngine.Events;
 namespace AFewDragons
 {
     [Serializable]
-    public class GlobalState
+    public class DragonState
     {
         public string Version = "1";
         public Dictionary<string, object> State = new Dictionary<string, object>();
     }
 
-    public static class GlobalStateManager
+    public static class DragonStateManager
     {
         private static UnityEvent<string, object> StateEvent = new GlobalStateEvent<string, object>();
 
@@ -20,19 +20,19 @@ namespace AFewDragons
 
         }
 
-        static GlobalStateManager()
+        static DragonStateManager()
         {
-            state = new GlobalState();
+            state = new DragonState();
         }
 
-        private static GlobalState state;
+        private static DragonState state;
 
-        public static void SetState(GlobalState state)
+        public static void SetState(DragonState state)
         {
-            GlobalStateManager.state = state;
+            DragonStateManager.state = state;
         }
 
-        public static GlobalState GetState()
+        public static DragonState GetState()
         {
             return state;
         }

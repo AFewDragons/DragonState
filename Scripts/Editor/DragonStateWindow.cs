@@ -8,32 +8,32 @@ using System;
 
 namespace AFewDragons
 {
-    public class GlobalStateWindow : EditorWindow
+    public class DragonStateWindow : EditorWindow
     {
         private System.Type[] types;
 
-        [MenuItem("Window/Global State")]
+        [MenuItem("Window/Dragon State")]
         static void Init()
         {
             // Get existing open window or if none, make a new one:
-            GlobalStateWindow window = (GlobalStateWindow)GetWindow(typeof(GlobalStateWindow));
+            DragonStateWindow window = (DragonStateWindow)GetWindow(typeof(DragonStateWindow));
             window.Show();
         }
 
         private void SetTypes()
         {
-            var allTypes = Assembly.GetAssembly(typeof(GlobalStateBase)).GetTypes();
-            types = (from System.Type type in allTypes where type.IsSubclassOf(typeof(GlobalStateBase)) select type).Where(t => !t.Name.Contains("GlobalStateBase")).ToArray();
+            var allTypes = Assembly.GetAssembly(typeof(DragonStateBase)).GetTypes();
+            types = (from System.Type type in allTypes where type.IsSubclassOf(typeof(DragonStateBase)) select type).Where(t => !t.Name.Contains("DragonStateBase")).ToArray();
         }
 
         private void Awake()
         {
-            GlobalStateManager.AddListener(StateChanged);
+            DragonStateManager.AddListener(StateChanged);
         }
 
         private void OnDestroy()
         {
-            GlobalStateManager.RemoveListener(StateChanged);
+            DragonStateManager.RemoveListener(StateChanged);
         }
 
         private void StateChanged(string key, object value)
@@ -46,10 +46,10 @@ namespace AFewDragons
             if (EditorApplication.isPlaying)
             {
                 if (types == null) SetTypes();
-                if (GlobalStateManager.GetState() != null && GlobalStateManager.GetState().State != null)
+                if (DragonStateManager.GetState() != null && DragonStateManager.GetState().State != null)
                 {
                     string removeState = null;
-                    foreach (var state in GlobalStateManager.GetState().State)
+                    foreach (var state in DragonStateManager.GetState().State)
                     {
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField(state.Key, state.Value.ToString());
@@ -81,16 +81,16 @@ namespace AFewDragons
                         newStateKey = EditorGUILayout.TextField(newStateKey);
                         switch (newStateType)
                         {
-                            case "GlobalStateFloat":
+                            case "DragonStateFloat":
                                 newStateValue = EditorGUILayout.FloatField(newStateValue != null ? (float)newStateValue : 0);
                                 break;
-                            case "GlobalStateString":
+                            case "DragonStateString":
                                 newStateValue = EditorGUILayout.TextField(newStateValue != null ? (string)newStateValue : "");
                                 break;
-                            case "GlobalStateInt":
+                            case "DragonStateInt":
                                 newStateValue = EditorGUILayout.IntField(newStateValue != null ? (int)newStateValue : 0);
                                 break;
-                            case "GlobalStateBool":
+                            case "DragonStateBool":
                                 newStateValue = GUILayout.Toggle(newStateValue != null ? (bool)newStateValue : false, GUIContent.none);
                                 break;
                             default:
@@ -99,7 +99,7 @@ namespace AFewDragons
                         }
                         if (GUILayout.Button("Add", GUILayout.Width(45)))
                         {
-                            GlobalStateManager.Set(newStateKey, newStateValue);
+                            DragonStateManager.Set(newStateKey, newStateValue);
                             newStateType = null;
                             newStateValue = null;
                             newStateKey = "";
@@ -109,7 +109,7 @@ namespace AFewDragons
                     
                     if (!string.IsNullOrEmpty(removeState))
                     {
-                        GlobalStateManager.Remove(removeState);
+                        DragonStateManager.Remove(removeState);
                     }
                 }
                 

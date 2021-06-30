@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298d56609d1a7ea4bb3dcc46b86d1e6f, type: 3}
+  m_Name: ExampleDaysState
+  m_EditorClassIdentifier: 
+  StateName: 
+  UseDefault: 1
+  Default: 0
+  Min: -2147483648
+  Max: 2147483647

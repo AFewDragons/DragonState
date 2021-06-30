@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace AFewDragons
 {
-    public class GlobalStateActivator : MonoBehaviour
+    public class DragonStateActivator : MonoBehaviour
     {
         [SerializeField]
-        private GlobalStateComparisonList comparison;
+        private DragonStateComparisonList comparison;
 
         [SerializeField]
         private GameObject targetObject;

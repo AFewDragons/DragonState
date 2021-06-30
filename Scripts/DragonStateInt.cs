@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace AFewDragons
 {
-    [CreateAssetMenu(fileName = "Int State", menuName = "Global State/Int")]
-    public class GlobalStateInt : GlobalStateBase<int> {
+    [CreateAssetMenu(fileName = "Int State", menuName = "Dragon State/Int")]
+    public class DragonStateInt : DragonStateBase<int> {
 
         public int Min = int.MinValue;
 

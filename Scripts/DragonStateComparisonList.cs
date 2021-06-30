@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace AFewDragons
 {
     [Serializable]
-    public class GlobalStateComparisonList
+    public class DragonStateComparisonList
     {
-        public List<GlobalStateComparison> Items;
+        public List<DragonStateComparison> Items;
 
         public bool Check()
         {

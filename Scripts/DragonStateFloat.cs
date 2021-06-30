@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace AFewDragons
 {
-    [CreateAssetMenu(fileName = "Float State", menuName = "Global State/Float")]
-    public class GlobalStateFloat : GlobalStateBase<float> {
+    [CreateAssetMenu(fileName = "Float State", menuName = "Dragon State/Float")]
+    public class DragonStateFloat : DragonStateBase<float> {
 
         public float Min = float.MinValue;
 

@@ -6,8 +6,8 @@ using System.Reflection;
 
 namespace AFewDragons
 {
-    [CustomEditor(typeof(GlobalStateBase), true, isFallback = false)]
-    public class GlobalStateEntry : Editor
+    [CustomEditor(typeof(DragonStateBase), true, isFallback = false)]
+    public class DragonStateEntry : Editor
     {
         private void OnEnable()
         {
@@ -36,7 +36,7 @@ namespace AFewDragons
 
             if (EditorApplication.isPlaying)
             {
-                var runningValue = GlobalStateManager.Get<object>(name.stringValue, null);
+                var runningValue = DragonStateManager.Get<object>(name.stringValue, null);
                 EditorGUILayout.LabelField($"Value is: {runningValue}");
             }
 
@@ -52,7 +52,7 @@ namespace AFewDragons
                                         BindingFlags.NonPublic |
                                         BindingFlags.Instance |
                                         BindingFlags.Static;
-            foreach (FieldInfo field in typeof(GlobalStateBase).GetFields(bindingFlags))
+            foreach (FieldInfo field in typeof(DragonStateBase).GetFields(bindingFlags))
             {
                 variables.Add(field.Name);
             }

@@ -1,5 +1,5 @@
 {
-    "name": "GlobalStateEditor",
+    "name": "DragonStateEditor",
     "references": [
         "GUID:e4ee3f57cfc53234a8e2178094e94d52"
     ],

@@ -5,14 +5,14 @@ using UnityEngine.Events;
 
 namespace AFewDragons
 {
-    public class GlobalStateSpawner : MonoBehaviour
+    public class DragonStateSpawner : MonoBehaviour
     {
         [Header("State")]
         [SerializeField]
-        private GlobalStateComparison prerequisiteState;
+        private DragonStateComparison prerequisiteState;
 
         [SerializeField]
-        private GlobalStateComparison completedState;
+        private DragonStateComparison completedState;
 
         [Header("Area")]
         [SerializeField]
@@ -26,12 +26,12 @@ namespace AFewDragons
 
         private void OnEnable()
         {
-            GlobalStateManager.AddListener(OnEvent);
+            DragonStateManager.AddListener(OnEvent);
         }
 
         private void OnDisable()
         {
-            GlobalStateManager.RemoveListener(OnEvent);
+            DragonStateManager.RemoveListener(OnEvent);
         }
 
         // Start is called before the first frame update
