@@ -2,14 +2,14 @@
 A global state system to use in unity.
 
 [![Discord](https://img.shields.io/discord/686737735356252191.svg)](https://discord.gg/M7Gv6ER)
-[![GitHub issues](https://img.shields.io/github/issues/AFewDragons/GlobalState.svg)](https://github.com/AFewDragons/GlobalState/issues)
-[![GitHub Wiki](https://img.shields.io/badge/wiki-available-brightgreen.svg)](https://github.com/AFewDragons/GlobalState/wiki)
+[![GitHub issues](https://img.shields.io/github/issues/AFewDragons/GlobalState.svg)](https://github.com/AFewDragons/DragonState/issues)
+[![GitHub Wiki](https://img.shields.io/badge/wiki-available-brightgreen.svg)](https://github.com/AFewDragons/DragonState/wiki)
 
 ### DragonState
 
 Want to make sure the state of your game always stays up to date.
 
-GlobalState allows you to use a ready made system that helps you manage the state of your game. Store everything in your game in one place.  
+DragonState allows you to use a ready made system that helps you manage the state of your game. Store everything in your game in one place.  
 Health, energy, is door open, quests, time clown laughed; anything you want to store.
 
 ### Features
@@ -27,7 +27,7 @@ To install this project using the Unity Package Manager,
 add the following via the Package 
 
 ```
-https://github.com/AFewDragons/GlobalState.git
+https://github.com/AFewDragons/DragonState.git
 ```
 
 You will need to have Git installed and available in your system's PATH.

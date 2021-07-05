@@ -23,21 +23,23 @@ namespace AFewDragons
         private long longComparitor;
 
         [SerializeField]
-        private long floatComparitor;
+        private float floatComparitor;
 
         [SerializeField]
-        private long doubleComparitor;
+        private double doubleComparitor;
 
         [SerializeField]
-        private long boolComparitor;
+        private bool boolComparitor;
 
         [SerializeField]
-        private long stringComparitor;
+        private string stringComparitor;
 
         [SerializeField]
         private UnityEngine.Object objectComparitor;
 
-        private IComparable comparibleComparitor { get
+        private IComparable comparibleComparitor
+        {
+            get
             {
                 Type type = stateValue.GetType();
                 if (type == typeof(int) || type == typeof(short) ||
@@ -56,6 +58,28 @@ namespace AFewDragons
                 else if (type == typeof(double))
                 {
                     return doubleComparitor;
+                }
+                return 0;
+            }
+        }
+
+        private object comparitor
+        {
+            get
+            {
+                Type type = stateValue.GetType();
+                Debug.Log(type.Name);
+                if (type == typeof(bool) || type == typeof(Boolean))
+                {
+                    return boolComparitor;
+                }
+                else if (type == typeof(string) || type == typeof(String))
+                {
+                    return stringComparitor;
+                }
+                else if (type == typeof(UnityEngine.Object))
+                {
+                    return objectComparitor;
                 }
                 return 0;
             }
@@ -88,7 +112,8 @@ namespace AFewDragons
                 }
                 else
                 {
-                    return stateValue.ObjectValue().Equals(comparibleComparitor);
+                    Debug.Log($"Value {stateValue.StateName} is {stateValue.ObjectValue()} and  {comparitor}");
+                    return stateValue.ObjectValue().Equals(comparitor);
                 }
             }
             return false;

@@ -5,6 +5,9 @@ using UnityEngine.Events;
 namespace AFewDragons
 {
     public abstract class DragonStateBase : ScriptableObject {
+        public string StateName;
+        public bool UseDefault = true;
+
         public new virtual System.Type GetType()
         {
             return null;
@@ -18,8 +21,8 @@ namespace AFewDragons
 
     public abstract class DragonStateBase<T> : DragonStateBase
     {
-        public string StateName;
-        public bool UseDefault = true;
+        
+        
 
         public T Default;
         protected DragonStateEvent<T> updateEvent = new DragonStateEvent<T>();
