@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditorInternal;
 using System;
 
 namespace AFewDragons
@@ -12,106 +13,127 @@ namespace AFewDragons
     [CustomPropertyDrawer(typeof(DragonStateComparison))]
     public class DragonStateComparisonEditor : PropertyDrawer
     {
-        private bool foldout = false;
+        private ReorderableList reorderableList = null;
+        private DragonStateComparisonBase selectedComparison = null;
+        private Editor comparisonEditor = null;
+
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var height = EditorGUIUtility.singleLineHeight;
 
-            if (foldout)
-            {
-                height += (5 + EditorGUIUtility.singleLineHeight)*2;
-            }
-            return height;
-        }
-
-        private bool GetIsNumber(DragonStateBase state)
-        {
-            var st = state.GetType();
-            return (st == typeof(int) ||
-                st == typeof(short) ||
-                st == typeof(long) ||
-                st == typeof(decimal) ||
-                st == typeof(double) ||
-                st == typeof(float) ||
-                st == typeof(ushort) ||
-                st == typeof(uint) ||
-                st == typeof(ulong)
-                );
-        }
-
-        private void ComparitorField(Rect rect, SerializedProperty property, Type type)
-        {
-            if (type == typeof(int) || type == typeof(short) ||
-                type == typeof(uint) || type == typeof(ushort))
-            {
-                var innerProp = property.FindPropertyRelative("intComparitor");
-                innerProp.intValue = EditorGUI.IntField(rect, innerProp.intValue);
-            } else if (type == typeof(long) || type == typeof(ulong))
-            {
-                var innerProp = property.FindPropertyRelative("longComparitor");
-                innerProp.longValue = EditorGUI.LongField(rect, innerProp.longValue);
-            } else if (type == typeof(float)) {
-                var innerProp = property.FindPropertyRelative("floatComparitor");
-                innerProp.floatValue = EditorGUI.FloatField(rect, innerProp.floatValue);
-            } else if (type == typeof(double)) {
-                var innerProp = property.FindPropertyRelative("doubleComparitor");
-                innerProp.doubleValue = EditorGUI.DoubleField(rect, innerProp.doubleValue);
-            } else if(type == typeof(string)) {
-                var innerProp = property.FindPropertyRelative("stringComparitor");
-                innerProp.stringValue = EditorGUI.TextField(rect, innerProp.stringValue);
-            } else if(type == typeof(bool)) {
-                var innerProp = property.FindPropertyRelative("boolComparitor");
-                innerProp.boolValue = EditorGUI.Toggle(rect, innerProp.boolValue);
-            } else if(type.IsSubclassOf(typeof(UnityEngine.Object))) {
-                var innerProp = property.FindPropertyRelative("objectComparitor");
-                innerProp.objectReferenceValue = EditorGUI.ObjectField(rect, innerProp.objectReferenceValue, type, true);
-            } else {
-                GUI.Label(rect, "This type of global state does not have comparible values");
-            }
+            return height + (reorderableList?.GetHeight() ?? 0);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
-
-            //Properties
-            var stateValue = property.FindPropertyRelative("stateValue");
-            var isNumber = property.FindPropertyRelative("isNumber");
-            var numberComparitorType = property.FindPropertyRelative("numberComparitorType");
-
-            var headerRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-
-            foldout = EditorGUI.BeginFoldoutHeaderGroup(headerRect, foldout, label);
-            if (foldout)
+            if (reorderableList == null)
             {
-                //EditorGUI.PropertyField(typeRect, type, GUIContent.none);
-
-                var oldStateValueType = stateValue.objectReferenceValue != null ? (stateValue.objectReferenceValue as DragonStateBase).GetType() : null;
-
-                var stateValueRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + 5), position.width - 110, EditorGUIUtility.singleLineHeight);
-                EditorGUI.ObjectField(stateValueRect, stateValue);
-                if(stateValue.objectReferenceValue != null)
-                {
-                    var newStateValueType = stateValue != null ? (stateValue.objectReferenceValue as DragonStateBase).GetType() : null;
-                    if (oldStateValueType != newStateValueType)
-                    {
-                        isNumber.boolValue = GetIsNumber(stateValue.objectReferenceValue as DragonStateBase);
-                    }
-
-                    float comparitorOffset = 0;
-                    if (isNumber.boolValue)
-                    {
-                        comparitorOffset = 100;
-                        var numberComparisonRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + 5) * 2, 95, EditorGUIUtility.singleLineHeight);
-                        numberComparitorType.enumValueIndex = (int)(DragonStateComparisonNumber)EditorGUI.EnumPopup(numberComparisonRect, (DragonStateComparisonNumber)numberComparitorType.enumValueIndex);
-                    }
-                    var comparitorRect = new Rect(position.x + comparitorOffset, position.y + (EditorGUIUtility.singleLineHeight + 5) * 2, position.width - comparitorOffset, EditorGUIUtility.singleLineHeight);
-                    ComparitorField(comparitorRect, property, newStateValueType);
-                }
+                SetupReorderableList(property);
             }
-            EditorGUI.EndFoldoutHeaderGroup();
-            
+
+            reorderableList.DoList(position);
+
+            DrawComparison();
             EditorGUI.EndProperty();
+        }
+
+        private void SetupReorderableList(SerializedProperty comparisonProperty)
+        {
+            Debug.Log(comparisonProperty.name);
+            var comparisonListProperty = comparisonProperty.FindPropertyRelative("comparisonList");
+            if (comparisonListProperty == null)
+            {
+                return;
+            }
+            reorderableList = new ReorderableList(comparisonProperty.serializedObject, comparisonListProperty, true, true, true, true);
+            reorderableList.drawHeaderCallback = OnDrawHeader;
+            reorderableList.drawElementCallback = OnDrawElement;
+            reorderableList.onSelectCallback = OnSelectElement;
+            reorderableList.onRemoveCallback = OnRemoveElement;
+            reorderableList.onAddDropdownCallback = OnAddDropdown;
+        }
+
+        private void OnDrawHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Comparisons");
+        }
+
+        private void OnDrawElement(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            if (!(0 <= index && index < reorderableList.serializedProperty.arraySize)) return;
+            var element = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
+            if (element == null) return;
+            var condition = element.objectReferenceValue as DragonStateComparisonBase;
+            if (condition == null) return;
+            EditorGUI.LabelField(rect, condition.GetEditorName());
+        }
+
+        private void OnSelectElement(ReorderableList list)
+        {
+            var isIndexValid = (0 <= list.index && list.index < list.count);
+            selectedComparison = isIndexValid ? (list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue as DragonStateComparisonBase) : null;
+            comparisonEditor = null;
+        }
+
+        private void OnRemoveElement(ReorderableList list)
+        {
+            var isIndexValid = (0 <= list.index && list.index < list.count);
+            if (!isIndexValid) return;
+            var comparison = list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue as DragonStateComparisonBase;
+            var element = list.serializedProperty.GetArrayElementAtIndex(list.index);
+            if (element.propertyType == SerializedPropertyType.ObjectReference)
+            {
+                element.objectReferenceValue = null;
+            }
+            ReorderableList.defaultBehaviours.DoRemoveButton(list);
+            list.serializedProperty.serializedObject.ApplyModifiedProperties();
+            UnityEngine.Object.DestroyImmediate(comparison);
+            OnSelectElement(list);
+        }
+
+        private void OnAddDropdown(Rect buttonRect, ReorderableList list)
+        {
+            var subtypes = DragonStateUtility.GetSubtypes<DragonStateComparisonBase>();
+            subtypes.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+            var menu = new GenericMenu();
+            for (int i = 0; i < subtypes.Count; i++)
+            {
+                var subtype = subtypes[i];
+                menu.AddItem(new GUIContent(ObjectNames.NicifyVariableName(subtype.Name).Replace("Quest Condition", string.Empty)), false, OnAddComparison, subtype);
+            }
+            menu.ShowAsContext();
+        }
+
+        private void OnAddComparison(object data)
+        {
+            var type = data as Type;
+            var comparison = DragonStateUtility.CreateScriptableObject(type);
+            comparison.name = type.Name;
+            selectedComparison = comparison as DragonStateComparisonBase;
+
+            try
+            {
+                reorderableList.serializedProperty.arraySize++;
+                var lastIndex = reorderableList.serializedProperty.arraySize - 1;
+                reorderableList.index = lastIndex;
+                reorderableList.serializedProperty.GetArrayElementAtIndex(lastIndex).objectReferenceValue = comparison;
+                reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
+
+            } catch (Exception e)
+            {
+#if UNITY_EDITOR
+                Debug.LogError("Could not add serialized object. Exception: " + e.Message);
+#endif
+            }
+
+        }
+        
+        private void DrawComparison()
+        {
+            if (selectedComparison == null) return;
+            if (comparisonEditor == null) comparisonEditor = Editor.CreateEditor(selectedComparison);
+            comparisonEditor.OnInspectorGUI();
         }
     }
 }

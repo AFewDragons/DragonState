@@ -7,7 +7,7 @@ namespace AFewDragons
     public class DragonStateActivator : MonoBehaviour
     {
         [SerializeField]
-        private DragonStateComparisonList comparison;
+        private DragonStateComparison comparison = new DragonStateComparison();
 
         [SerializeField]
         private GameObject targetObject;

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14c5ff05cfe9844399c8a1b19261061, type: 3}
   m_Name: ExampleBoolOpenState
   m_EditorClassIdentifier: 
-  StateName: 
+  StateName: exampleBoolState
   UseDefault: 1
   Default: 0
