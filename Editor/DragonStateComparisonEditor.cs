@@ -32,11 +32,17 @@ namespace AFewDragons
                 SetupReorderableList(property);
             }
 
-            reorderableList.DoList(position);
+            var height = EditorGUIUtility.singleLineHeight;
 
-            DrawComparison();
+            var listRect = new Rect(position.x, height, position.width, reorderableList.GetHeight());
+
+            reorderableList.DoList(listRect);
+
+            DrawComparison(new Rect(position.x, height + reorderableList.GetHeight(), position.width, height));
             EditorGUI.EndProperty();
         }
+
+        
 
         private void SetupReorderableList(SerializedProperty comparisonProperty)
         {
@@ -112,6 +118,8 @@ namespace AFewDragons
             comparison.name = type.Name;
             selectedComparison = comparison as DragonStateComparisonBase;
 
+            Debug.Log($"Created comparison {comparison.name}", comparison);
+
             try
             {
                 reorderableList.serializedProperty.arraySize++;
@@ -129,11 +137,16 @@ namespace AFewDragons
 
         }
         
-        private void DrawComparison()
+        private void DrawComparison(Rect position)
         {
             if (selectedComparison == null) return;
             if (comparisonEditor == null) comparisonEditor = Editor.CreateEditor(selectedComparison);
-            comparisonEditor.OnInspectorGUI();
+
+            if (GUI.Button(position, "Edit")){
+                DragonStateComparisonWindowEditor.ShowWindow(comparisonEditor);
+            }
+            
+            //comparisonEditor.DrawDefaultInspector();
         }
     }
 }
