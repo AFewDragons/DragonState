@@ -116,7 +116,7 @@ namespace AFewDragons
                     return stateValue.ObjectValue().Equals(comparitor);
                 }
             }
-            return false;
+            return true;
         }
     }
 
