@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace AFewDragons
@@ -64,6 +65,43 @@ namespace AFewDragons
             if (scriptableObject == null) return;
             var methodInfo = scriptableObject.GetType().GetMethod("Initialize");
             if (methodInfo != null) methodInfo.Invoke(scriptableObject, null);
+        }
+
+        /// <summary>
+        /// Add asset to another asset through asset database. Does prefab checking.
+        /// </summary>
+        /// <param name="baseObj"></param>
+        /// <param name="obj"></param>
+        public static void AddToAsset(UnityEngine.Object baseObj, UnityEngine.Object obj)
+        {
+            var so = obj as ScriptableObject;
+            if (so != null)
+            {
+                AssetDatabase.AddObjectToAsset(baseObj, so);
+            }
+            var mb = obj as MonoBehaviour;
+            if (PrefabUtility.IsPartOfPrefabAsset(mb))
+            {
+                AssetDatabase.AddObjectToAsset(baseObj, mb);
+            }
+        }
+
+        /// <summary>
+        /// Remvoe object from asset Database, does prefab checking.
+        /// </summary>
+        /// <param name="obj"></param>
+        public static void RemoveFromAsset(UnityEngine.Object obj)
+        {
+            var so = obj as ScriptableObject;
+            if (so != null)
+            {
+                AssetDatabase.RemoveObjectFromAsset(so);
+            }
+            var mb = obj as MonoBehaviour;
+            if (PrefabUtility.IsPartOfPrefabAsset(mb))
+            {
+                AssetDatabase.RemoveObjectFromAsset(mb);
+            }
         }
     }
 

@@ -94,6 +94,8 @@ namespace AFewDragons
             }
             ReorderableList.defaultBehaviours.DoRemoveButton(list);
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
+
+            DragonStateUtility.RemoveFromAsset(reorderableList.serializedProperty.serializedObject.targetObject);
             UnityEngine.Object.DestroyImmediate(comparison);
             OnSelectElement(list);
         }
@@ -118,7 +120,7 @@ namespace AFewDragons
             comparison.name = type.Name;
             selectedComparison = comparison as DragonStateComparisonBase;
 
-            Debug.Log($"Created comparison {comparison.name}", comparison);
+            DragonStateUtility.AddToAsset(selectedComparison, reorderableList.serializedProperty.serializedObject.targetObject);
 
             try
             {
