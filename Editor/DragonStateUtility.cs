@@ -80,7 +80,7 @@ namespace AFewDragons
                 AssetDatabase.AddObjectToAsset(baseObj, so);
             }
             var mb = obj as MonoBehaviour;
-            if (PrefabUtility.IsPartOfPrefabAsset(mb))
+            if (mb != null && PrefabUtility.IsPartOfPrefabAsset(mb))
             {
                 AssetDatabase.AddObjectToAsset(baseObj, mb);
             }
@@ -98,7 +98,7 @@ namespace AFewDragons
                 AssetDatabase.RemoveObjectFromAsset(so);
             }
             var mb = obj as MonoBehaviour;
-            if (PrefabUtility.IsPartOfPrefabAsset(mb))
+            if (mb != null && PrefabUtility.IsPartOfPrefabAsset(mb))
             {
                 AssetDatabase.RemoveObjectFromAsset(mb);
             }
