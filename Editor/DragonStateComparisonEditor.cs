@@ -17,6 +17,7 @@ namespace AFewDragons
         {
             public ReorderableList ReorderableList;
             public DragonStateComparisonBase SelectedComparison;
+            public SerializedObject SerializedObject;
         }
 
         private Editor comparisonEditor = null;
@@ -40,6 +41,7 @@ namespace AFewDragons
             if (!cache.TryGetValue(cacheKey, out data))
             {
                 data = new EditorData();
+                data.SerializedObject = property.serializedObject;
                 cache.Add(cacheKey, data);
             }
 
@@ -98,6 +100,7 @@ namespace AFewDragons
             var isIndexValid = (0 <= list.index && list.index < list.count);
             data.SelectedComparison = isIndexValid ? (list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue as DragonStateComparisonBase) : null;
             comparisonEditor = null;
+            EditorUtility.SetDirty(data.SerializedObject.targetObject);
         }
 
         private void OnRemoveElement(EditorData data, ReorderableList list)
@@ -154,6 +157,10 @@ namespace AFewDragons
                 Debug.LogError("Could not add serialized object. Exception: " + e.Message);
 #endif
             }
+            finally
+            {
+                EditorUtility.SetDirty(editorData.SerializedObject.targetObject);
+            }
 
         }
         
@@ -165,8 +172,6 @@ namespace AFewDragons
             if (GUI.Button(position, "Edit")){
                 DragonStateComparisonWindowEditor.ShowWindow(comparisonEditor);
             }
-            
-            //comparisonEditor.DrawDefaultInspector();
         }
     }
 }
