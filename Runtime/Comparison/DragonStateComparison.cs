@@ -27,6 +27,9 @@ namespace AFewDragons
     public class DragonStateComparison
     {
         [SerializeField]
+        private DragonStateComparisonType comparisonType;
+
+        [SerializeField]
         private List<DragonStateComparisonBase> comparisonList = new List<DragonStateComparisonBase>();
 
         /// <summary>
@@ -37,10 +40,18 @@ namespace AFewDragons
         {
             foreach (var item in comparisonList)
             {
-                if (!item.Check()) return false;
+                var check = item.Check();
+                if (comparisonType == DragonStateComparisonType.Any && check) return true;
+                if (comparisonType == DragonStateComparisonType.All && !check) return false;
             }
-            return true;
+            return comparisonType == DragonStateComparisonType.All;
         }
+    }
+
+    public enum DragonStateComparisonType
+    {
+        All = 0,
+        Any = 1,
     }
 
     public enum DragonStateComparisonNumber

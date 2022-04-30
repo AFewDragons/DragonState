@@ -36,6 +36,28 @@ You will need to have Git installed and available in your system's PATH.
 
 Simply copy/paste the source files into your assets folder.
 
+### How To Use
+
+#### Custom State
+
+```
+using AFewDragons;
+
+[System.Serializable]
+public class Npc
+{
+	public string Name;
+	public int Age;
+	public string FavouriteMeal;
+}
+
+[CreateAssetMent(fileName = "NpcState", menuName = "States/Npc")]
+public class NpcState : DragonStateBase<Npc>
+{
+	//You can override the get and set methods to change how your state is serialized.
+}
+```
+
 ### Community
 
 Create issues for bugs or feature requests.

@@ -123,20 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &650470418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f97d38440caac148b501380debd3294, type: 3}
-  m_Name: DragonStateComparisonBool
-  m_EditorClassIdentifier: 
-  comparison: {fileID: 11400000, guid: c62577ccea7f1114c875de0f1fc374db, type: 2}
-  compareValue: 1
 --- !u!1 &824300692
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +394,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2133748558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f97d38440caac148b501380debd3294, type: 3}
+  m_Name: DragonStateComparisonBool
+  m_EditorClassIdentifier: 
+  comparison: {fileID: 0}
+  compareValue: 0
 --- !u!1001 &2383038291657423988
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -422,14 +422,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2383038292175860614, guid: 1a6bbf29e2775e5458429cd00c17d76b,
         type: 3}
-      propertyPath: targetObject
-      value: 
-      objectReference: {fileID: 824300692}
+      propertyPath: comparison.comparisonList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2383038292175860614, guid: 1a6bbf29e2775e5458429cd00c17d76b,
         type: 3}
       propertyPath: comparison.comparisonList.Array.data[0]
       value: 
-      objectReference: {fileID: 650470418}
+      objectReference: {fileID: 2133748558}
     - target: {fileID: 2383038292175860615, guid: 1a6bbf29e2775e5458429cd00c17d76b,
         type: 3}
       propertyPath: m_RootOrder

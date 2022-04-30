@@ -12,6 +12,8 @@ namespace AFewDragons
     {
         private System.Type[] types;
 
+        private Texture logo;
+
         [MenuItem("Window/Dragon State")]
         static void Init()
         {
@@ -43,6 +45,8 @@ namespace AFewDragons
 
         void OnGUI()
         {
+            var logoRect = EditorGUILayout.GetControlRect(false, 35);
+            GUI.DrawTexture(logoRect, DragonStateResources.Logo, ScaleMode.ScaleToFit);
             if (EditorApplication.isPlaying)
             {
                 if (types == null) SetTypes();

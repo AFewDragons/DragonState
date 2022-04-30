@@ -9,6 +9,8 @@ namespace AFewDragons
     [CustomEditor(typeof(DragonStateBase), true, isFallback = false)]
     public class DragonStateEntry : Editor
     {
+        private bool defaultFoldout = false;
+
         private void OnEnable()
         {
             //serializedObject.FindProperty
@@ -18,18 +20,25 @@ namespace AFewDragons
         {
             serializedObject.Update();
             var name = serializedObject.FindProperty("StateName");
+            if (string.IsNullOrWhiteSpace(name.stringValue))
+            {
+                EditorGUILayout.LabelField("Please enter a state name.", DragonStateResources.ErrorStyle);
+            }
             EditorGUILayout.PropertyField(name);
 
             var useDefault = serializedObject.FindProperty("UseDefault");
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(useDefault);
-            if (useDefault.boolValue)
+            defaultFoldout = EditorGUILayout.Foldout(defaultFoldout, new GUIContent("Default Settings"));
+            if (defaultFoldout)
             {
-                var rect = EditorGUILayout.GetControlRect();
-                EditorGUI.PropertyField(rect, serializedObject.FindProperty("Default"), GUIContent.none);
+                EditorGUILayout.BeginVertical(DragonStateResources.BoxStyle);
+                EditorGUILayout.PropertyField(useDefault);
+                if (useDefault.boolValue)
+                {
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("Default"), GUIContent.none);
+                }
+                EditorGUILayout.EndVertical();
             }
-            EditorGUILayout.EndHorizontal();
 
 
             DrawPropertiesExcluding(serializedObject, new string[] { "StateName", "UseDefault", "Default", "m_Script" });

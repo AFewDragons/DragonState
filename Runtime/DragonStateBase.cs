@@ -29,6 +29,11 @@ namespace AFewDragons
 
         public virtual T Get()
         {
+            if (string.IsNullOrWhiteSpace(StateName))
+            {
+                Debug.LogError($"DragonState: {this.name}'s StateName is not set. You will need to set this before it Set or Get methods can be used on this state.", this);
+                return default(T);
+            }
             return DragonStateManager.Get(StateName, UseDefault ? Default : default(T));
         }
 
@@ -39,6 +44,11 @@ namespace AFewDragons
 
         public virtual void Set(T value)
         {
+            if (string.IsNullOrWhiteSpace(StateName))
+            {
+                Debug.LogError($"DragonState: {this.name}'s StateName is not set. You will need to set this before it Set or Get methods can be used on this state.", this);
+                return;
+            }
             DragonStateManager.Set(StateName, value);
             updateEvent.Invoke(value);
         }

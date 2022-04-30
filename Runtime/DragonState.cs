@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine.Events;
+using UnityEngine;
 
 namespace AFewDragons
 {
@@ -51,7 +52,11 @@ namespace AFewDragons
 
         public static void Set<T>(string key, T newState)
         {
-            if (string.IsNullOrWhiteSpace(key)) return;
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                Debug.LogError("Dragon State Manager: Key need to be supplied to set a state.");
+                return;
+            }
             state.State[key] = newState;
             StateEvent.Invoke(key, newState);
         }
