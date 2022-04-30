@@ -36,11 +36,12 @@ namespace AFewDragons
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var cacheKey = property.propertyPath;
-            EditorData data = cache[cacheKey];
-            if (data == null)
+            EditorData data = null;
+            if (!cache.TryGetValue(cacheKey, out data))
             {
                 data = new EditorData();
             }
+
 
             EditorGUI.BeginProperty(position, label, property);
             if (data.ReorderableList == null)
