@@ -26,8 +26,8 @@ namespace AFewDragons
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var cacheKey = property.propertyPath;
+            if (!cache.ContainsKey(cacheKey)) return 0;
             EditorData data = cache[cacheKey];
-            if (data == null) return 0;
             var height = EditorGUIUtility.singleLineHeight;
 
             return (data.ReorderableList?.GetHeight() ?? 0) + (data.SelectedComparison == null ? 0 : height + EditorGUIUtility.standardVerticalSpacing);
