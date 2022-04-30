@@ -40,6 +40,7 @@ namespace AFewDragons
             if (!cache.TryGetValue(cacheKey, out data))
             {
                 data = new EditorData();
+                cache.Add(cacheKey, data);
             }
 
 
