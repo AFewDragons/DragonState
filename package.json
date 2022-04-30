@@ -1,7 +1,7 @@
 {
     "name": "com.afewdragons.dragonstate",
     "description": "Dragon State provides a robust system for maintaining and using state through out gameplay lifecycles.",
-    "version": "0.6.0-preview",
+    "version": "0.6.1-preview",
     "unity": "2018.1",
     "displayName": "Dragon State",
 	"author": {
