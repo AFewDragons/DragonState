@@ -26,9 +26,7 @@ namespace AFewDragons
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            var cacheKey = property.propertyPath;
-            if (!cache.ContainsKey(cacheKey)) return 0;
-            EditorData data = cache[cacheKey];
+            var data = GetData(property);
             var height = EditorGUIUtility.singleLineHeight;
 
             return (data.ReorderableList?.GetHeight() ?? 0) + (data.SelectedComparison == null ? 0 : height + EditorGUIUtility.standardVerticalSpacing);
@@ -36,21 +34,9 @@ namespace AFewDragons
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var cacheKey = property.propertyPath;
-            EditorData data = null;
-            if (!cache.TryGetValue(cacheKey, out data))
-            {
-                data = new EditorData();
-                data.SerializedObject = property.serializedObject;
-                cache.Add(cacheKey, data);
-            }
-
+            var data = GetData(property);
 
             EditorGUI.BeginProperty(position, label, property);
-            if (data.ReorderableList == null)
-            {
-                SetupReorderableList(data, property);
-            }
 
             var height = EditorGUIUtility.singleLineHeight;
 
@@ -62,7 +48,20 @@ namespace AFewDragons
             EditorGUI.EndProperty();
         }
 
-        
+        private EditorData GetData(SerializedProperty property)
+        {
+            var cacheKey = property.propertyPath;
+            EditorData data = null;
+            if (!cache.TryGetValue(cacheKey, out data))
+            {
+                data = new EditorData();
+                data.SerializedObject = property.serializedObject;
+                SetupReorderableList(data, property);
+                cache.Add(cacheKey, data);
+            }
+
+            return data;
+        }
 
         private void SetupReorderableList(EditorData data, SerializedProperty comparisonProperty)
         {
