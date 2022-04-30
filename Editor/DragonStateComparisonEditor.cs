@@ -21,7 +21,7 @@ namespace AFewDragons
         {
             var height = EditorGUIUtility.singleLineHeight;
 
-            return height + (reorderableList?.GetHeight() ?? 0);
+            return (reorderableList?.GetHeight() ?? 0) + (selectedComparison == null ? 0 : height + EditorGUIUtility.standardVerticalSpacing);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -34,11 +34,11 @@ namespace AFewDragons
 
             var height = EditorGUIUtility.singleLineHeight;
 
-            var listRect = new Rect(position.x, height, position.width, reorderableList.GetHeight());
+            var listRect = new Rect(position.x, position.y, position.width, reorderableList.GetHeight());
 
             reorderableList.DoList(listRect);
 
-            DrawComparison(new Rect(position.x, height + reorderableList.GetHeight(), position.width, height));
+            DrawComparison(new Rect(position.x, position.y + EditorGUIUtility.standardVerticalSpacing + reorderableList.GetHeight(), position.width, height));
             EditorGUI.EndProperty();
         }
 
