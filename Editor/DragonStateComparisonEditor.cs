@@ -13,38 +13,54 @@ namespace AFewDragons
     [CustomPropertyDrawer(typeof(DragonStateComparison))]
     public class DragonStateComparisonEditor : PropertyDrawer
     {
-        private ReorderableList reorderableList = null;
-        private DragonStateComparisonBase selectedComparison = null;
+        private class EditorData
+        {
+            public ReorderableList ReorderableList;
+            public DragonStateComparisonBase SelectedComparison;
+        }
+
         private Editor comparisonEditor = null;
+
+        private Dictionary<string, EditorData> cache = new Dictionary<string, EditorData>();
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
+            var cacheKey = property.propertyPath;
+            EditorData data = cache[cacheKey];
+            if (data == null) return 0;
             var height = EditorGUIUtility.singleLineHeight;
 
-            return (reorderableList?.GetHeight() ?? 0) + (selectedComparison == null ? 0 : height + EditorGUIUtility.standardVerticalSpacing);
+            return (data.ReorderableList?.GetHeight() ?? 0) + (data.SelectedComparison == null ? 0 : height + EditorGUIUtility.standardVerticalSpacing);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginProperty(position, label, property);
-            if (reorderableList == null)
+            var cacheKey = property.propertyPath;
+            EditorData data = cache[cacheKey];
+            if (data == null)
             {
-                SetupReorderableList(property);
+                data = new EditorData();
+            }
+
+            EditorGUI.BeginProperty(position, label, property);
+            if (data.ReorderableList == null)
+            {
+                SetupReorderableList(data, property);
             }
 
             var height = EditorGUIUtility.singleLineHeight;
 
-            var listRect = new Rect(position.x, position.y, position.width, reorderableList.GetHeight());
+            var listRect = new Rect(position.x, position.y, position.width, data.ReorderableList.GetHeight());
 
-            reorderableList.DoList(listRect);
+            data.ReorderableList.DoList(listRect);
 
-            DrawComparison(new Rect(position.x, position.y + EditorGUIUtility.standardVerticalSpacing + reorderableList.GetHeight(), position.width, height));
+            DrawComparison(data, new Rect(position.x, position.y + EditorGUIUtility.standardVerticalSpacing + data.ReorderableList.GetHeight(), position.width, height));
             EditorGUI.EndProperty();
         }
 
         
 
-        private void SetupReorderableList(SerializedProperty comparisonProperty)
+        private void SetupReorderableList(EditorData data, SerializedProperty comparisonProperty)
         {
             Debug.Log(comparisonProperty.name);
             var comparisonListProperty = comparisonProperty.FindPropertyRelative("comparisonList");
@@ -52,12 +68,12 @@ namespace AFewDragons
             {
                 return;
             }
-            reorderableList = new ReorderableList(comparisonProperty.serializedObject, comparisonListProperty, true, true, true, true);
-            reorderableList.drawHeaderCallback = OnDrawHeader;
-            reorderableList.drawElementCallback = OnDrawElement;
-            reorderableList.onSelectCallback = OnSelectElement;
-            reorderableList.onRemoveCallback = OnRemoveElement;
-            reorderableList.onAddDropdownCallback = OnAddDropdown;
+            data.ReorderableList = new ReorderableList(comparisonProperty.serializedObject, comparisonListProperty, true, true, true, true);
+            data.ReorderableList.drawHeaderCallback = OnDrawHeader;
+            data.ReorderableList.drawElementCallback = (rect, index, isActive, isFocused) => { OnDrawElement(data, rect, index, isActive, isFocused); };
+            data.ReorderableList.onSelectCallback = (list) => { OnSelectElement(data, list); };
+            data.ReorderableList.onRemoveCallback = (list) => { OnRemoveElement(data, list); };
+            data.ReorderableList.onAddDropdownCallback = (rect, list) => { OnAddDropdown(data, rect, list); };
         }
 
         private void OnDrawHeader(Rect rect)
@@ -65,24 +81,24 @@ namespace AFewDragons
             EditorGUI.LabelField(rect, "Comparisons");
         }
 
-        private void OnDrawElement(Rect rect, int index, bool isActive, bool isFocused)
+        private void OnDrawElement(EditorData data, Rect rect, int index, bool isActive, bool isFocused)
         {
-            if (!(0 <= index && index < reorderableList.serializedProperty.arraySize)) return;
-            var element = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
+            if (!(0 <= index && index < data.ReorderableList.serializedProperty.arraySize)) return;
+            var element = data.ReorderableList.serializedProperty.GetArrayElementAtIndex(index);
             if (element == null) return;
             var condition = element.objectReferenceValue as DragonStateComparisonBase;
             if (condition == null) return;
             EditorGUI.LabelField(rect, condition.GetEditorName());
         }
 
-        private void OnSelectElement(ReorderableList list)
+        private void OnSelectElement(EditorData data, ReorderableList list)
         {
             var isIndexValid = (0 <= list.index && list.index < list.count);
-            selectedComparison = isIndexValid ? (list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue as DragonStateComparisonBase) : null;
+            data.SelectedComparison = isIndexValid ? (list.serializedProperty.GetArrayElementAtIndex(list.index).objectReferenceValue as DragonStateComparisonBase) : null;
             comparisonEditor = null;
         }
 
-        private void OnRemoveElement(ReorderableList list)
+        private void OnRemoveElement(EditorData data, ReorderableList list)
         {
             var isIndexValid = (0 <= list.index && list.index < list.count);
             if (!isIndexValid) return;
@@ -95,12 +111,12 @@ namespace AFewDragons
             ReorderableList.defaultBehaviours.DoRemoveButton(list);
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
 
-            DragonStateUtility.RemoveFromAsset(reorderableList.serializedProperty.serializedObject.targetObject);
+            DragonStateUtility.RemoveFromAsset(data.ReorderableList.serializedProperty.serializedObject.targetObject);
             UnityEngine.Object.DestroyImmediate(comparison);
-            OnSelectElement(list);
+            OnSelectElement(data, list);
         }
 
-        private void OnAddDropdown(Rect buttonRect, ReorderableList list)
+        private void OnAddDropdown(EditorData data, Rect buttonRect, ReorderableList list)
         {
             var subtypes = DragonStateUtility.GetSubtypes<DragonStateComparisonBase>();
             subtypes.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
@@ -108,27 +124,27 @@ namespace AFewDragons
             for (int i = 0; i < subtypes.Count; i++)
             {
                 var subtype = subtypes[i];
-                menu.AddItem(new GUIContent(ObjectNames.NicifyVariableName(subtype.Name).Replace("Quest Condition", string.Empty)), false, OnAddComparison, subtype);
+                menu.AddItem(new GUIContent(ObjectNames.NicifyVariableName(subtype.Name).Replace("Quest Condition", string.Empty)), false, (d) => { OnAddComparison(data, d); }, subtype);
             }
             menu.ShowAsContext();
         }
 
-        private void OnAddComparison(object data)
+        private void OnAddComparison(EditorData editorData, object data)
         {
             var type = data as Type;
             var comparison = DragonStateUtility.CreateScriptableObject(type);
             comparison.name = type.Name;
-            selectedComparison = comparison as DragonStateComparisonBase;
+            editorData.SelectedComparison = comparison as DragonStateComparisonBase;
 
-            DragonStateUtility.AddToAsset(selectedComparison, reorderableList.serializedProperty.serializedObject.targetObject);
+            DragonStateUtility.AddToAsset(editorData.SelectedComparison, editorData.ReorderableList.serializedProperty.serializedObject.targetObject);
 
             try
             {
-                reorderableList.serializedProperty.arraySize++;
-                var lastIndex = reorderableList.serializedProperty.arraySize - 1;
-                reorderableList.index = lastIndex;
-                reorderableList.serializedProperty.GetArrayElementAtIndex(lastIndex).objectReferenceValue = comparison;
-                reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
+                editorData.ReorderableList.serializedProperty.arraySize++;
+                var lastIndex = editorData.ReorderableList.serializedProperty.arraySize - 1;
+                editorData.ReorderableList.index = lastIndex;
+                editorData.ReorderableList.serializedProperty.GetArrayElementAtIndex(lastIndex).objectReferenceValue = comparison;
+                editorData.ReorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
 
             } catch (Exception e)
             {
@@ -139,10 +155,10 @@ namespace AFewDragons
 
         }
         
-        private void DrawComparison(Rect position)
+        private void DrawComparison(EditorData data, Rect position)
         {
-            if (selectedComparison == null) return;
-            if (comparisonEditor == null) comparisonEditor = Editor.CreateEditor(selectedComparison);
+            if (data.SelectedComparison == null) return;
+            if (comparisonEditor == null) comparisonEditor = Editor.CreateEditor(data.SelectedComparison);
 
             if (GUI.Button(position, "Edit")){
                 DragonStateComparisonWindowEditor.ShowWindow(comparisonEditor);
