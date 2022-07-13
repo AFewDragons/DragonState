@@ -12,7 +12,31 @@ namespace AFewDragons
         [SerializeField]
         private GameObject targetObject;
 
+        [SerializeField]
+        private DragonStateBase[] stateTriggers; 
+
         private void Awake()
+        {
+            Check();
+        }
+
+        private void OnEnable()
+        {
+            foreach (var trigger in stateTriggers)
+            {
+                trigger.AddUpdateListener(Check);
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var trigger in stateTriggers)
+            {
+                trigger.RemoveUpdateListener(Check);
+            }
+        }
+
+        private void Check()
         {
             if (targetObject)
             {

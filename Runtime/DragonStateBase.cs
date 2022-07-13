@@ -8,6 +8,18 @@ namespace AFewDragons
         public string StateName;
         public bool UseDefault = true;
 
+        protected UnityEvent onUpdate = new UnityEvent();
+
+        public void AddUpdateListener(UnityAction action)
+        {
+            onUpdate.AddListener(action);
+        }
+
+        public void RemoveUpdateListener(UnityAction action)
+        {
+            onUpdate.RemoveListener(action);
+        }
+
         public new virtual System.Type GetType()
         {
             return null;
@@ -51,14 +63,27 @@ namespace AFewDragons
             }
             DragonStateManager.Set(StateName, value);
             updateEvent.Invoke(value);
+            onUpdate.Invoke();
         }
 
+        [System.Obsolete("Use AddValueListener instead.")]
         public virtual void AddListener(UnityAction<T> action)
         {
             updateEvent.AddListener(action);
         }
 
+        [System.Obsolete("Use RemoveValueListener instead.")]
         public virtual void RemoveListener(UnityAction<T> action)
+        {
+            updateEvent.RemoveListener(action);
+        }
+
+        public virtual void AddValueListener(UnityAction<T> action)
+        {
+            updateEvent.AddListener(action);
+        }
+
+        public virtual void RemoveValueListener(UnityAction<T> action)
         {
             updateEvent.RemoveListener(action);
         }
