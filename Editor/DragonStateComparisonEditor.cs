@@ -115,8 +115,8 @@ namespace AFewDragons
             ReorderableList.defaultBehaviours.DoRemoveButton(list);
             list.serializedProperty.serializedObject.ApplyModifiedProperties();
 
-            DragonStateUtility.RemoveFromAsset(data.ReorderableList.serializedProperty.serializedObject.targetObject);
-            UnityEngine.Object.DestroyImmediate(comparison);
+            DragonStateUtility.RemoveFromAsset(comparison);
+            
             OnSelectElement(data, list);
         }
 

@@ -36,7 +36,7 @@ namespace AFewDragons
             }
         }
 
-        private void Check()
+        public void Check()
         {
             if (targetObject)
             {

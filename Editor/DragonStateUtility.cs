@@ -72,9 +72,10 @@ namespace AFewDragons
         /// </summary>
         /// <param name="baseObj"></param>
         /// <param name="obj"></param>
-        public static void AddToAsset(UnityEngine.Object baseObj, UnityEngine.Object obj)
+        public static void AddToAsset(ScriptableObject baseObj, UnityEngine.Object obj)
         {
             var so = obj as ScriptableObject;
+            baseObj.hideFlags = HideFlags.HideInHierarchy;
             if (so != null)
             {
                 AssetDatabase.AddObjectToAsset(baseObj, so);
@@ -87,7 +88,7 @@ namespace AFewDragons
         }
 
         /// <summary>
-        /// Remvoe object from asset Database, does prefab checking.
+        /// Remove object from asset Database, does prefab checking.
         /// </summary>
         /// <param name="obj"></param>
         public static void RemoveFromAsset(UnityEngine.Object obj)
@@ -102,6 +103,7 @@ namespace AFewDragons
             {
                 AssetDatabase.RemoveObjectFromAsset(mb);
             }
+            UnityEngine.Object.DestroyImmediate(obj);
         }
     }
 
