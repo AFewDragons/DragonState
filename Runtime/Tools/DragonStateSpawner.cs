@@ -9,20 +9,17 @@ namespace AFewDragons
     {
         [Header("State")]
         [SerializeField]
-        private DragonStateComparison prerequisiteState;
+        private DragonStateComparison comparison;
 
         [SerializeField]
-        private DragonStateComparison completedState;
+        private bool updateOnStateChange = true;
 
         [Header("Area")]
         [SerializeField]
-        private GameObject beforePrereqsPrefab;
+        private GameObject conditionsMetPrefab;
 
         [SerializeField]
-        private GameObject completedStatePrefab;
-
-        [SerializeField]
-        private GameObject spawnPrefab;
+        private GameObject conditionsNotMetPrefab;
 
         private void OnEnable()
         {
@@ -42,28 +39,23 @@ namespace AFewDragons
 
         private void OnEvent(string key, object value)
         {
-            //Resolve();
+            if(updateOnStateChange)
+            {
+                //Resolve();
+            }
         }
 
         private void Resolve()
         {
-            if (prerequisiteState.Check())
+            if (comparison.Check())
             {
-                if (!completedState.Check())
-                {
-                    if(spawnPrefab)
-                        Instantiate(spawnPrefab, transform.position, Quaternion.identity);
-                }
-                else
-                {
-                    if (completedStatePrefab)
-                        Instantiate(completedStatePrefab, transform.position, Quaternion.identity);
-                }
+                if(conditionsMetPrefab)
+                    Instantiate(conditionsMetPrefab, transform.position, Quaternion.identity);
             }
             else
             {
-                if (beforePrereqsPrefab)
-                    Instantiate(beforePrereqsPrefab, transform.position, Quaternion.identity);
+                if (conditionsNotMetPrefab)
+                    Instantiate(conditionsNotMetPrefab, transform.position, Quaternion.identity);
             }
         }
     }

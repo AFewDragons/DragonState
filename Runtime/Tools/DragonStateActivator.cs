@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AFewDragons
 {
     public class DragonStateActivator : MonoBehaviour
     {
         [SerializeField]
-        private DragonStateComparison comparison = new DragonStateComparison();
+        private DragonStateComparison comparison;
 
         [SerializeField]
-        private GameObject targetObject;
+        [FormerlySerializedAs("targetObject")]
+        private GameObject comparisonMetTarget;
+
+        [SerializeField]
+        private GameObject comparisonNotMetTarget;
 
         [SerializeField]
         private DragonStateBase[] stateTriggers; 
@@ -38,9 +43,13 @@ namespace AFewDragons
 
         public void Check()
         {
-            if (targetObject)
+            if (comparisonMetTarget)
             {
-                targetObject.SetActive(comparison.Check());
+                comparisonMetTarget.SetActive(comparison.Check());
+            }
+            if (comparisonNotMetTarget)
+            {
+                comparisonNotMetTarget.SetActive(!comparison.Check());
             }
         }
     }

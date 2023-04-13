@@ -5,32 +5,16 @@ using UnityEngine;
 namespace AFewDragons
 {
     /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class DragonStateComparisonBase : ScriptableObject
-    {
-        public virtual void Initialize() { }
-
-        public virtual bool Check() { return false; }
-
-        public virtual string GetEditorName()
-        {
-            return GetType().Name;
-        }
-    }
-
-    /// <summary>
     /// Compares a DragonState instance with the specific type of comparitor
     /// </summary>
-    [Serializable]
-    public class DragonStateComparison
+    [CreateAssetMenu(fileName = "New Comparison", menuName = "Dragon State/Comparison")]
+    public class DragonStateComparison : ScriptableObject
     {
         [SerializeField]
         private DragonStateComparisonType comparisonType;
 
         [SerializeField]
-        private List<DragonStateComparisonBase> comparisonList = new List<DragonStateComparisonBase>();
+        private List<DragonStateComparisonBase> comparisonList;
 
         /// <summary>
         /// Checks if the stte matches the set comparitor.
