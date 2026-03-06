@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AFewDragons
 {
-    [CreateAssetMenu(fileName = "Float State", menuName = "Dragon State/Float")]
+    [CreateAssetMenu(fileName = "Float State", menuName = "A Few Dragons/Dragon State/Float")]
     public class DragonStateFloat : DragonStateBase<float> {
 
         public float Min = float.MinValue;

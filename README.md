@@ -19,6 +19,17 @@ Health, energy, is door open, quests, time clown laughed; anything you want to s
 * Base states for int/float/string/bool included
 * Manipulate state in editor window for testing
 
+### Changes
+
+#### 0.8
+
+- Added Vector2 state
+- Added Vector3 state
+
+#### 0.7
+
+- Fixed an issue with an editor script in the runtime library
+
 ### Install
 
 #### Unity Package Manager

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AFewDragons
 {
-    [CreateAssetMenu(fileName = "Int State", menuName = "Dragon State/Int")]
+    [CreateAssetMenu(fileName = "Int State", menuName = "A Few Dragons/Dragon State/Int")]
     public class DragonStateInt : DragonStateBase<int> {
 
         public int Min = int.MinValue;
