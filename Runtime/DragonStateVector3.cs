@@ -8,7 +8,7 @@ namespace AFewDragons
     {
         private class V3
         {
-            public float x; public float y;, public float z;
+            public float x; public float y; public float z;
         }
 
         public override Vector3 Get()
