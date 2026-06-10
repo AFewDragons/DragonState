@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace AFewDragons
 {
-    public abstract class DragonStateBase : ScriptableObject {
+    public abstract class DragonStateBase : ScriptableObject
+    {
         public string StateName;
         public bool UseDefault = true;
 
@@ -31,13 +33,28 @@ namespace AFewDragons
         }
     }
 
+    public static class DragonStateEvents
+    {
+        private static Dictionary<string, object> eventTypes = new Dictionary<string, object>();
+
+        public static UnityEvent<T> GetUpdateEvent<T>(string key)
+        {
+            if (eventTypes.TryGetValue(key, out object value))
+            {
+                return (UnityEvent<T>)value;
+            }
+            else
+            {
+                var newEvent = new UnityEvent<T>();
+                eventTypes.Add(key, newEvent);
+                return newEvent;
+            }
+        }
+    }
+
     public abstract class DragonStateBase<T> : DragonStateBase
     {
-        
-        
-
         public T Default;
-        protected DragonStateEvent<T> updateEvent = new DragonStateEvent<T>();
 
         public virtual T Get()
         {
@@ -62,30 +79,31 @@ namespace AFewDragons
                 return;
             }
             DragonStateManager.Set(StateName, value);
-            updateEvent.Invoke(value);
+            DragonStateEvents.GetUpdateEvent<T>(StateName).Invoke(value);
             onUpdate.Invoke();
         }
 
         [System.Obsolete("Use AddValueListener instead.")]
         public virtual void AddListener(UnityAction<T> action)
         {
-            updateEvent.AddListener(action);
+            AddValueListener(action);
         }
 
         [System.Obsolete("Use RemoveValueListener instead.")]
         public virtual void RemoveListener(UnityAction<T> action)
         {
-            updateEvent.RemoveListener(action);
+            RemoveValueListener(action);
         }
 
         public virtual void AddValueListener(UnityAction<T> action)
         {
-            updateEvent.AddListener(action);
+            DragonStateEvents.GetUpdateEvent<T>(StateName).AddListener(action);
         }
 
         public virtual void RemoveValueListener(UnityAction<T> action)
         {
-            updateEvent.RemoveListener(action);
+
+            DragonStateEvents.GetUpdateEvent<T>(StateName).RemoveListener(action);
         }
 
         public override Type GetType()

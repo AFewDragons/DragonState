@@ -21,6 +21,10 @@ Health, energy, is door open, quests, time clown laughed; anything you want to s
 
 ### Changes
 
+#### 0.8.1
+
+- Fixed protected UnityEvent resetting after being set. Problem encountered after Unity 6 version.
+
 #### 0.8
 
 - Added Vector2 state
